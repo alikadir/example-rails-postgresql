@@ -3,4 +3,17 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+  #
+  root "health#welcome"
+
+  namespace :api do
+    resources :products
+  end
+
+  scope "new-api" do
+    scope :v3 do
+      resources :dummy
+    end
+  end
+
 end
