@@ -2,19 +2,26 @@ module Api
   class ProductsController < ApplicationController
 
     def index
-      p "index == call"
+      @products = Product.order(id: :desc)
+      render :json => @products
+    end
+
+    def show
+      begin
+        @product = Product.find(params[:id])
+        render :json => @product
+      rescue
+        render :json => { error: "PRODUCT ID #{params[:id]} NOT FOUND!" }, status: :not_found
+      end
     end
 
     def create
       @product = Product.create(product_params)
       @product.save
-      render json: @product
+      render json: @product, status: :created
     end
 
     def update
-      being
-
-      rescue
       @product = Product.find(params[:id])
       # @product = Product.find(id: params[:id]) # you can also write the id parameter
       @product.update(product_params)
@@ -27,15 +34,17 @@ module Api
         @product.destroy
         render json: @product
       else
-        render :json => "PRODUCT NOT FOUND!"
+        render :json => "PRODUCT ID #{params[:id]} NOT FOUND!", status: :bad_request
       end
     end
 
+    private
+
     def product_params
-      @my_params = params.permit(:name, :description, :quantity, :price)
-      pp @my_params
-      @my_params
+      params.permit(:name, :description, :quantity, :price)
     end
+
+
   end
 end
 

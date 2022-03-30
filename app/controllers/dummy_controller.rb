@@ -1,5 +1,5 @@
 class DummyController < ApplicationController
   def index
-    p "dummy == index == call"
+    render :json => "Hi I'm Dummy"
   end
 end
