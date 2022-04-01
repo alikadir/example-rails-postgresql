@@ -9,13 +9,20 @@ module Api
     def show
       begin
         @product = Product.find(params[:id])
-        render :json => @product
+        @image = rails_blob_url(@product.product_image)
+        render :json => { product: @product, image: @image }
       rescue
         render :json => { error: "PRODUCT ID #{params[:id]} NOT FOUND!" }, status: :not_found
       end
     end
 
+    def get_by_name
+      @product = Product.where(name: params[:name])
+      render :json => @product
+    end
+
     def create
+      @image = params[:product_image]
       @product = Product.create(product_params)
       @product.save
       render json: @product, status: :created
@@ -41,9 +48,8 @@ module Api
     private
 
     def product_params
-      params.permit(:name, :description, :quantity, :price)
+      params.permit(:name, :description, :quantity, :price, :product_image)
     end
-
 
   end
 end

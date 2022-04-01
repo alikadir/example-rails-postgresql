@@ -1,5 +1,9 @@
 module Api
   class CategoriesController < ApplicationController
+
+    before_action :my_before_action, only: %i[update destroy]
+    #after_action
+
     def index
       render :json => { message: "hi" }
     end
@@ -23,7 +27,6 @@ module Api
     end
 
     def update
-      @category = get_category_by_id
       if !@category.blank?
         @category.update(params_category)
         render :json => @category
@@ -33,7 +36,6 @@ module Api
     end
 
     def destroy
-      @category = get_category_by_id
       if @category.destroy
         render :json => @category
       else
@@ -49,6 +51,10 @@ module Api
 
     def params_category
       params.permit(:name)
+    end
+
+    def my_before_action
+      @category = get_category_by_id
     end
   end
 end
