@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   root "health#welcome"
 
   namespace :api do
-    resources :products
+    resources :products do
+      get :get_by_price_range, on: :collection
+    end
     resources :categories
   end
 

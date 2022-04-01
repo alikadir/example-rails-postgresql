@@ -16,8 +16,9 @@ module Api
       end
     end
 
-    def get_by_name
-      @product = Product.where(name: params[:name])
+    def get_by_price_range
+      # we can write sql in where method
+      @product = Product.where("price > :min and price < :max", max: params[:max], min: params[:min])
       render :json => @product
     end
 
