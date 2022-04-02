@@ -5,41 +5,43 @@ module Api
     #after_action
 
     def index
-      render :json => { message: "hi" }
+      render json: { message: "hi" }
     end
 
     def show
       @category = get_category_by_id
-      unless @category.blank?
-        render :json => @category
+      if @category.blank?
+        render json: { message: "not found" }, status: :not_found
       else
-        render :json => { message: "not found" }, status: :not_found
+        render json: @category
       end
     end
 
     def create
       @category = Category.create(params_category)
-      if @category.save
-        render :json => @category, status: :created
+      if !@category.valid?
+        render @category.errors.full_messages
+      elsif @category.save
+        render json: @category, status: :created
       else
-        render :json => { error: "cannot create category" }, status: :bad_request
+        render json: { error: "cannot create category" }, status: :bad_request
       end
     end
 
     def update
       if !@category.blank?
         @category.update(params_category)
-        render :json => @category
+        render json: @category
       else
-        render :json => { error: "not found" }, status: :not_found
+        render json: { error: "not found" }, status: :not_found
       end
     end
 
     def destroy
       if @category.destroy
-        render :json => @category
+        render json: @category
       else
-        render :json => { error: "cannot delete" }, status: :bad_request
+        render json: { error: "cannot delete" }, status: :bad_request
       end
     end
 
@@ -50,7 +52,7 @@ module Api
     end
 
     def params_category
-      params.permit(:name)
+      params.permit(:name) # result {name: "Electronics"}
     end
 
     def my_before_action

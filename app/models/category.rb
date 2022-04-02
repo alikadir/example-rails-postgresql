@@ -1,7 +1,11 @@
 class Category < ApplicationRecord
 
+  validates :name, presence: true, length: { maximum: 20, minimum: 3 }
+
   before_create :my_before_create
   after_create :my_after_create
+
+  has_many :products
 
   def my_before_create
     #byebug

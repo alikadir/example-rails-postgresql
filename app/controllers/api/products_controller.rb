@@ -25,8 +25,11 @@ module Api
     def create
       @image = params[:product_image]
       @product = Product.create(product_params)
-      @product.save
-      render json: @product, status: :created
+      if @product.save
+        render json: @product, status: :created
+      else
+        render json: @product.errors.full_messages
+      end
     end
 
     def update
