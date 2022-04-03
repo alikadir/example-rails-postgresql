@@ -2,8 +2,8 @@ module Api
   class ProductsController < ApplicationController
 
     def index
-      @products = Product.order(id: :desc)
-      render :json => @products
+      @products = Product.order(id: :desc).includes(:category) # includes for N+1 problem
+      render :index # using jbuilder
     end
 
     def show
@@ -52,7 +52,7 @@ module Api
     private
 
     def product_params
-      params.permit(:name, :description, :quantity, :price, :product_image)
+      params.permit(:name, :description, :quantity, :price, :product_image, :category_id)
     end
 
   end
